@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Scan QR codes with your phone camera to view 3D models in AR. No extra app – open camera, scan, tap link, view in your space." />
+  <title>AR QR Viewer – 3D models in AR via QR code</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .hero {
+      text-align: center;
+      padding: 2rem 0;
+    }
+    .hero h1 {
+      font-size: 1.75rem;
+      margin-bottom: 0.5rem;
+    }
+    .steps {
+      list-style: none;
+      padding: 0;
+      margin: 1.5rem 0;
+    }
+    .steps li {
+      padding: 0.5rem 0;
+      padding-left: 2rem;
+      position: relative;
+    }
+    .steps li::before {
+      content: attr(data-step);
+      position: absolute;
+      left: 0;
+      width: 1.4rem;
+      height: 1.4rem;
+      background: var(--accent);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .demo-link {
+      display: inline-block;
+      margin-top: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="hero">
+      <h1>3D models in AR via QR code</h1>
+      <p class="subtitle">Scan with your phone’s camera → tap the link → view the model in your space. No extra app.</p>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size: 1.1rem; margin: 0 0 0.5rem;">How it works</h2>
+      <ol class="steps">
+        <li data-step="1">Open your smartphone’s default camera app.</li>
+        <li data-step="2">Point it at the QR code.</li>
+        <li data-step="3">Tap the link that appears.</li>
+        <li data-step="4">View the 3D model in WebAR (or use “View in your space” for full AR).</li>
+      </ol>
+      <p class="muted">Works on modern iOS and Android, and on Apple Vision Pro.</p>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size: 1.1rem; margin: 0 0 0.5rem;">Try it now</h2>
+      <p class="muted">On your phone, open the camera, scan this QR code (or use the link), then tap to open.</p>
+      <p><a href="viewer.html?model=https://modelviewer.dev/shared-assets/models/Astronaut.glb" class="btn btn-primary demo-link" target="_blank" rel="noopener">Open demo model in AR</a></p>
+      <p><a href="viewer.html?model=models/sample.gltf" class="btn btn-primary demo-link" style="margin-left: 0.5rem;" target="_blank" rel="noopener">Open local sample model</a></p>
+      <p class="muted" style="font-size: 0.85rem;">Use the same link on your phone to test the viewer. For a real QR flow, create a code that points to this URL and scan it with the camera.</p>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size: 1.1rem; margin: 0 0 0.5rem;">Create your own AR code</h2>
+      <p class="muted">Open your camera, scan a product, and we'll create a 3D model and a QR code so others can view it in AR.</p>
+      <a href="create.html" class="btn btn-primary" style="margin-top: 0.5rem;">Scan product → 3D model & AR code</a>
+    </div>
+
+    <div class="card">
+      <h2 style="font-size: 1.1rem; margin: 0 0 0.5rem;">Use cases</h2>
+      <ul class="muted" style="margin: 0; padding-left: 1.25rem;">
+        <li><strong>AR previews:</strong> Let customers view products (furniture, sports gear) in their space.</li>
+        <li><strong>Share 3D scans:</strong> Host your scan as .glb, create a QR, and share the link.</li>
+        <li><strong>Product info:</strong> Link from packaging or print to an interactive 3D model.</li>
+        <li><strong>3D printed QR codes:</strong> Use tools like QRCode2STL or MakerWorld to make physical QR codes that open 3D/AR content.</li>
+      </ul>
+    </div>
+
+    <nav class="nav-links" style="margin-top: 1rem;">
+      <a href="create.html">Create AR Code</a>
+      <a href="viewer.html?model=models/sample.gltf">Viewer</a>
+    </nav>
+  </div>
+</body>
+</html>

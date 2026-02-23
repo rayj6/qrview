@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="Scan a product with your camera to create a 3D model and AR code." />
+  <title>Scan product → 3D model & AR code</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <style>
+    .scan-section { margin-bottom: 1.5rem; }
+    .camera-wrap {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 4/3;
+      max-height: 50vh;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .camera-wrap video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+    .camera-wrap .placeholder {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+    }
+    .capture-btn {
+      width: 100%;
+      margin-top: 0.75rem;
+      padding: 0.85rem;
+      font-size: 1rem;
+    }
+    .captures-row {
+      display: flex;
+      gap: 0.5rem;
+      margin-top: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .mode-choice { margin-bottom: 1rem; }
+    .mode-buttons { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+    .mode-buttons .btn { flex: 1; min-width: 120px; }
+    .step-label { font-weight: 600; margin-bottom: 0.5rem; color: var(--text); }
+    .captures-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: flex-start; }
+    .captures-row .capture-slot { text-align: center; }
+    .captures-row .capture-slot img {
+      width: 72px;
+      height: 72px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 2px solid var(--border);
+      display: block;
+    }
+    .captures-row .capture-slot .slot-label { font-size: 0.75rem; color: var(--muted); margin-top: 0.25rem; }
+    .processing {
+      text-align: center;
+      padding: 2rem 1rem;
+      color: var(--muted);
+    }
+    .processing .spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid var(--border);
+      border-top-color: var(--accent);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 1rem;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .result-section { display: none; }
+    .result-section.visible { display: block; }
+    .scan-section.hidden { display: none; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="viewer.html?model=models/sample.gltf">Viewer</a>
+    </nav>
+    <h1>Scan product → 3D model & AR code</h1>
+    <p class="subtitle">Open your camera, point it at the product, and capture. We'll create a 3D model and a QR code so others can view it in AR.</p>
+    <p class="muted" style="margin-bottom: 1rem; font-size: 0.9rem;">For a <strong>real 3D object</strong>, add <code>TRIPO_API_KEY</code> to <code>.env</code>. For <strong>4 or 6 views</strong>, also set <code>PUBLIC_BASE_URL</code> (e.g. ngrok URL) — see README.</p>
+
+    <div id="scan-section" class="scan-section card">
+      <div id="mode-choice" class="mode-choice">
+        <p class="muted" style="margin-bottom: 0.75rem;">Choose how many views to capture for better 3D quality:</p>
+        <div class="mode-buttons">
+          <button id="mode-4-btn" class="btn btn-primary">4 views</button>
+          <button id="mode-6-btn" class="btn btn-primary">6 views (more detail)</button>
+        </div>
+        <p class="muted" style="margin-top: 0.75rem; font-size: 0.85rem;">4 views: front, back, left side, right side.<br>6 views: + top and bottom.</p>
+      </div>
+      <div id="camera-flow" style="display: none;">
+        <p id="step-label" class="step-label"></p>
+        <div class="camera-wrap">
+          <video id="camera-video" autoplay playsinline muted></video>
+          <div id="camera-placeholder" class="placeholder">Tap "Open camera" below</div>
+        </div>
+        <button id="open-camera-btn" class="btn btn-primary capture-btn">Open camera</button>
+        <div id="after-camera" style="display: none;">
+          <button id="capture-btn" class="btn btn-primary capture-btn">Capture <span id="capture-step-name">front</span> view</button>
+          <div id="captures-row" class="captures-row"></div>
+          <button id="create-model-btn" class="btn btn-primary capture-btn" style="margin-top: 1rem; display: none;">Create 3D model & AR code</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="processing-section" class="card processing" style="display: none;">
+      <div class="spinner"></div>
+      <p>Creating 3D model from your scan…</p>
+    </div>
+
+    <div id="result-card" class="card result-section">
+      <h2 style="font-size: 1.1rem; margin: 0 0 0.5rem;">Your 3D model & AR code</h2>
+      <p class="muted" style="margin-bottom: 0.75rem;">Share the QR code or link. Anyone can scan it and see the model in AR through their camera.</p>
+      <div id="qrcode"></div>
+      <p class="muted" style="margin-top: 0.75rem;">
+        <strong>Link:</strong> <a id="ar-link" href="#" target="_blank" rel="noopener"></a>
+      </p>
+      <p class="muted" style="margin-top: 0.5rem; font-size: 0.8rem;">Works on iOS, Android, and Apple Vision Pro.</p>
+      <button id="scan-again-btn" class="btn btn-primary" style="margin-top: 1rem;">Scan another product</button>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="js/create.js"></script>
+</body>
+</html>

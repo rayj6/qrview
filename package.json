@@ -1,0 +1,15 @@
+{
+  "name": "ar-qr-viewer",
+  "version": "1.0.0",
+  "description": "Scan QR codes with your phone camera to view 3D models in AR (WebAR). No extra app required.",
+  "scripts": {
+    "start": "node server.js",
+    "serve": "npx serve .",
+    "preview": "node server.js"
+  },
+  "private": true,
+  "dependencies": {
+    "form-data": "^4.0.0",
+    "dotenv": "^16.0.0"
+  }
+}

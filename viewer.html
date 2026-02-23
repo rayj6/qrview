@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="See the 3D model in real life through your camera – AR view in your space." />
+  <title>See in AR – Camera view</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script type="module" src="https://ajax.googleapis.com/ajax/libs/model-viewer/3.3.0/model-viewer.min.js"></script>
+  <style>
+    .viewer-wrap {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    #viewer-container {
+      min-height: 280px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    model-viewer {
+      width: 100%;
+      max-width: 480px;
+      height: 60vh;
+      min-height: 320px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .viewer-wrap .card {
+      margin-top: 1rem;
+      text-align: center;
+    }
+    .viewer-wrap .btn {
+      margin-top: 0.5rem;
+    }
+    .error-msg {
+      color: #f87171;
+      margin: 1rem 0;
+    }
+    .ar-cta {
+      max-width: 360px;
+    }
+    .ar-headline {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: var(--text);
+      margin: 0 0 0.5rem;
+    }
+    .ar-desc {
+      margin: 0 0 1rem;
+      font-size: 0.9rem;
+    }
+    .btn-ar {
+      padding: 0.85rem 1.25rem;
+      font-size: 1rem;
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <div class="viewer-wrap">
+    <div id="viewer-container">
+      <!-- model-viewer injected when model URL is valid -->
+    </div>
+    <div id="error-container" class="card" style="display: none;">
+      <p class="error-msg" id="error-text">Missing model URL.</p>
+      <p class="muted">Use a link that includes <code>?model=</code> and a URL to a .glb or .gltf file.</p>
+    </div>
+    <div id="success-card" class="card ar-cta" style="display: none;">
+      <p class="ar-headline">See this 3D model in real life through your camera</p>
+      <p class="muted ar-desc">Tap below — your camera will open and the model will appear in your room. Move your phone to place it, then walk around it.</p>
+      <button id="ar-button" class="btn btn-primary btn-ar">Open camera &amp; view in my space</button>
+      <p class="muted desktop-hint" style="margin-top: 1rem; font-size: 0.85rem; display: none;">Open this link on your phone to see the model in real life through your camera.</p>
+    </div>
+  </div>
+  <script src="js/viewer.js"></script>
+</body>
+</html>
