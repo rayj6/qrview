@@ -186,17 +186,29 @@
         form.append('images', blob, 'capture-' + (i + 1) + '.jpg');
       });
       fetch(CREATE_MODEL_API, { method: 'POST', body: form })
-        .then(function (r) { return r.json(); })
+        .then(function (r) {
+          if (!r.ok) throw new Error('API ' + r.status);
+          return r.json().catch(function () { throw new Error('API returned non-JSON'); });
+        })
         .then(function (data) {
           if (data && data.scanId) {
             useScanId(data.scanId);
           } else if (data && data.modelUrl) {
             useModelUrl(data.modelUrl);
           } else {
-            finishWithPlaceholder();
+            showApiError();
           }
         })
-        .catch(function () { finishWithPlaceholder(); });
+        .catch(function () { showApiError(); });
+
+    function showApiError() {
+      processingSection.style.display = 'none';
+      scanSection.style.display = 'block';
+      var msg = 'Create-model API is not available (e.g. 404 on Vercel). ';
+      msg += 'This app needs the Node server to save scans and call Tripo. ';
+      msg += 'Run locally with \'npm start\' or deploy to Railway/Render — see README.';
+      alert(msg);
+    }
     } else {
       finishWithPlaceholder();
     }

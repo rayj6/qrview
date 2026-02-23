@@ -113,10 +113,12 @@ By default, scanning a product gives you a **quick preview**: your photo on a fl
 
 ## Deployment
 
-Deploy the whole folder as a **static site**:
+**Viewer only (static):** Deploy the folder as a static site to **Vercel**, **Netlify**, or **GitHub Pages**. The viewer and demo/sample link work; the **Create AR Code** page (paste URL) also works. The **scan → 3D model** flow does **not** work on static hosting because it needs the Node server.
 
-- **Netlify / Vercel:** drag the folder or connect the repo; no build step.
-- **GitHub Pages:** push the repo and enable Pages on the branch that contains these files.
+**Scan + Tripo (full app):** The **Scan product → 3D model & AR code** feature needs the Node server (`node server.js`) to receive uploads, save images, and call the Tripo API. Deploy to a platform that runs Node and allows file storage, for example:
+
+- **[Railway](https://railway.app)** — connect repo, set `TRIPO_API_KEY` and `PUBLIC_BASE_URL` (your Railway URL) in Variables, run `npm start`.
+- **[Render](https://render.com)** — create a Web Service, build command `npm install`, start command `npm start`, add env vars.
 
 Use **HTTPS** in production so camera-app QR links open correctly and WebAR works on all supported devices.
 
